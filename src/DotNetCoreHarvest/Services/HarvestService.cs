@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -70,7 +71,7 @@ namespace Paynter.Harvest.Services
             return JsonConvert.DeserializeObject<dynamic>(content);
         }
 
-        public async Task<dynamic> Projects()
+        public async Task<IEnumerable<HarvestProject>> Projects()
         {
             var response = await HttpClient.GetAsync($"/projects");
             var content = await response.Content.ReadAsStringAsync();
@@ -87,7 +88,8 @@ namespace Paynter.Harvest.Services
                  {
                      TypeNameHandling = TypeNameHandling.All
                  };
-            return JsonConvert.DeserializeObject<IEnumerable<HarvestProjectResponseFormat>>(content, settings);
+            IEnumerable<HarvestProjectResponseFormat> projects = JsonConvert.DeserializeObject<IEnumerable<HarvestProjectResponseFormat>>(content, settings);
+            return projects.Select(u => u.Project).ToList();
         }
 
     }
