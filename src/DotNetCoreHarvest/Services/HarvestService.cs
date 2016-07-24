@@ -82,13 +82,15 @@ namespace Paynter.Harvest.Services
                 // throw new WitAiServiceException("Error sending message to Wit.AI Message API", response, contents);
             }
 
-            _logger.LogDebug("Harvest project response {@content}", content);
-
-                var settings = new JsonSerializerSettings
-                 {
-                     TypeNameHandling = TypeNameHandling.All
-                 };
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
+            
             IEnumerable<HarvestProjectResponseFormat> projects = JsonConvert.DeserializeObject<IEnumerable<HarvestProjectResponseFormat>>(content, settings);
+            
+            _logger.LogDebug("{count} projects were fetched from Harvest", projects.Count());
+
             return projects.Select(u => u.Project).ToList();
         }
 
