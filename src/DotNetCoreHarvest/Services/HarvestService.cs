@@ -59,40 +59,52 @@ namespace Paynter.Harvest.Services
 
         public async Task<dynamic> WhoAmI()
         {
-            var response = await HttpClient.GetAsync($"/account/who_am_i");
-            var content = await response.Content.ReadAsStringAsync();
-            
-            if(response.StatusCode != HttpStatusCode.OK)
-            {
-                _logger.LogError("Error sending message to Harvest API");
-                // throw new WitAiServiceException("Error sending message to Wit.AI Message API", response, contents);
-            }
-
-            return JsonConvert.DeserializeObject<dynamic>(content);
+            return await GetRequest<dynamic>($"/projects");
         }
 
         public async Task<IEnumerable<HarvestProject>> Projects()
         {
-            var response = await HttpClient.GetAsync($"/projects");
-            var content = await response.Content.ReadAsStringAsync();
+            var results = await GetRequest<IEnumerable<HarvestProjectResponseFormat>>($"/projects");
+            return results.Select(u => u.Project).ToList();
+        }
+
+        public async Task<IEnumerable<HarvestUser>> People()
+        {
+            var results = await GetRequest<IEnumerable<HarvestUserResponseFormat>>($"/people");
+            return results.Select(u => u.User).ToList();  
+        }
+
+        public async Task<IEnumerable<HarvestTaskAssignment>> TaskAssignments(string projectId)
+        {
+            var results = await GetRequest<IEnumerable<HarvestTaskAssignmentResponseFormat>>($"/projects/{projectId}/task_assignments");
+            return results.Select(u => u.TaskAssignment).ToList();
+        }
+
+        public async Task<IEnumerable<HarvestTask>> Tasks()
+        {
+            var results = await GetRequest<IEnumerable<HarvestTaskResponseFormat>>($"/tasks");
+            return results.Select(u => u.Task).ToList();
+        }
+
+        public async Task LogTime()
+        {
+            
+        }
+
+        public async Task<TResponseFormat> GetRequest<TResponseFormat>(string url) where TResponseFormat : class
+        {
+            var response = await HttpClient.GetAsync(url);
 
             if(response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Error sending message to Harvest API");
+                _logger.LogError("Error sending message to Harvest API endpoint {endpoint}", url);
                 // throw new WitAiServiceException("Error sending message to Wit.AI Message API", response, contents);
             }
 
-            var settings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            };
-            
-            IEnumerable<HarvestProjectResponseFormat> projects = JsonConvert.DeserializeObject<IEnumerable<HarvestProjectResponseFormat>>(content, settings);
-            
-            _logger.LogDebug("{count} projects were fetched from Harvest", projects.Count());
-
-            return projects.Select(u => u.Project).ToList();
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TResponseFormat>(content);
         }
+
 
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Paynter.Harvest.Models
@@ -7,7 +8,7 @@ namespace Paynter.Harvest.Models
     {
         public HarvestProject Project { get; set; }
     }
-    public class HarvestProject
+    public class HarvestProject : HarvestBaseModel
     {
         public string Id { get; set; }
 
@@ -38,12 +39,6 @@ namespace Paynter.Harvest.Models
         [JsonProperty("show_budget_to_all")]
         public bool ShowBudgetToAll { get; set; }
 
-        [JsonProperty("created_at")]
-        public DateTime? CreatedAt { get; set; }
-
-        [JsonProperty("updated_at")]
-        public DateTime? UpdatedAt { get; set; }
-
         [JsonProperty("starts_on")]
         public DateTime? StartsOn { get; set; }
 
@@ -60,5 +55,7 @@ namespace Paynter.Harvest.Models
         [JsonProperty("hint_latest_record_at")]
         public DateTime? HintLatestRecordAt { get; set; }
         public string Notes { get; set; }
+
+        public IEnumerable<HarvestTaskAssignment> Tasks { get; set; }
     }
 }
