@@ -18,9 +18,6 @@ namespace Paynter.Harvest.Models
         public string Code { get; set; }
         public bool Active { get; set; }
         public bool Billable { get; set; }
-
-        [JsonProperty("bill_by")]
-        public string BillBy { get; set; }
         
         [JsonProperty("hourly_rate")]
         public double? HourlyRate { get; set; }
