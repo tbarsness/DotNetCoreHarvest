@@ -9,7 +9,7 @@ namespace Paynter.Harvest.Models
     }
     public class HarvestUser : HarvestBaseModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Email { get; set; }
 
