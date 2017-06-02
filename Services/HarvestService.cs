@@ -73,16 +73,20 @@ namespace Paynter.Harvest.Services {
             return results.Select(u => u.Task).ToList();
         }
 
-        //public async void Entries(int harvestProjectId) {
         public async Task<IEnumerable<HarvestEntry>> Entries(int harvestProjectId) {
+            return await Entries(harvestProjectId, new DateTime(2010, 01, 01), DateTime.Now);
+        }
+
+        //public async void Entries(int harvestProjectId) {
+        public async Task<IEnumerable<HarvestEntry>> Entries(int harvestProjectId, DateTime fromDate, DateTime toDate) {
             //TODO: Fix date range or will break 1/1
-            var results = await GetRequest<IEnumerable<JObject>>($"/projects/{harvestProjectId}/entries/?from=20140101&to=20180101");
+            var results = await GetRequest<IEnumerable<JObject>>($"/projects/{harvestProjectId}/entries/?from={fromDate.ToString("yyyyMMdd")}&to={toDate.ToString("yyyyMMdd")}");
             return results.Select(u => u["day_entry"].ToObject<HarvestEntry>()).ToList();
         }
 
-        public async Task LogTime() {
+        //public async Task LogTime() {
 
-        }
+        //}
 
         public async Task<TResponseFormat> GetRequest<TResponseFormat>(string url) where TResponseFormat : class {
             var response = await HttpClient.GetAsync(url);
