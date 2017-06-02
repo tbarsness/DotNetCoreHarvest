@@ -8,7 +8,7 @@ namespace Paynter.Harvest.Models
     }
     public class HarvestTask : HarvestBaseModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool Deactivated { get; set; }
 
