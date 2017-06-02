@@ -10,7 +10,7 @@ namespace Paynter.Harvest.Models
     }
     public class HarvestProject : HarvestBaseModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("client_id")]
         public string ClientId { get; set; }
