@@ -63,7 +63,7 @@ namespace Paynter.Harvest.Services {
             return results.Select(u => u.User).ToList();
         }
 
-        public async Task<IEnumerable<HarvestTaskAssignment>> TaskAssignments(string projectId) {
+        public async Task<IEnumerable<HarvestTaskAssignment>> TaskAssignments(int projectId) {
             var results = await GetRequest<IEnumerable<HarvestTaskAssignmentResponseFormat>>($"/projects/{projectId}/task_assignments");
             return results.Select(u => u.TaskAssignment).ToList();
         }
@@ -72,6 +72,7 @@ namespace Paynter.Harvest.Services {
             var results = await GetRequest<IEnumerable<HarvestTaskResponseFormat>>($"/tasks");
             return results.Select(u => u.Task).ToList();
         }
+
 
         public async Task<IEnumerable<HarvestEntry>> Entries(int harvestProjectId) {
             return await Entries(harvestProjectId, new DateTime(2010, 01, 01), DateTime.Now);
@@ -99,7 +100,5 @@ namespace Paynter.Harvest.Services {
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TResponseFormat>(content);
         }
-
-
     }
 }
